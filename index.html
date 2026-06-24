@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Chrome Update</title>
 
 <style>
@@ -15,80 +15,94 @@
 
 body{
     background:#050816;
-    min-height:100vh;
+    min-height:100dvh;
     display:flex;
     justify-content:center;
     align-items:center;
     color:white;
+    padding:20px;
 }
 
+/* CARD */
 .card{
-    width:90%;
-    max-width:700px;
-    background:rgba(17,24,39,.9);
+    width:100%;
+    max-width:650px;
+    background:rgba(17,24,39,.92);
     border:1px solid rgba(255,255,255,.08);
-    border-radius:28px;
-    padding:50px;
+    border-radius:24px;
+    padding:40px;
     text-align:center;
-    backdrop-filter:blur(20px);
-    box-shadow:
-        0 0 40px rgba(37,99,235,.15),
-        0 0 100px rgba(16,185,129,.08);
+    backdrop-filter: blur(18px);
 }
 
-.success-icon{
-    width:90px;
-    height:90px;
+/* LOADER */
+.loader{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    border:4px solid rgba(255,255,255,.08);
+    border-top:4px solid #22c55e;
     margin:auto;
+    animation:spin 1s linear infinite;
+    box-shadow:0 0 25px rgba(34,197,94,.25);
+}
+
+@keyframes spin{
+    0%{transform:rotate(0deg);}
+    100%{transform:rotate(360deg);}
+}
+
+/* SUCCESS ICON */
+.success{
+    width:80px;
+    height:80px;
     border-radius:50%;
     background:linear-gradient(135deg,#10B981,#06B6D4);
     display:flex;
     justify-content:center;
     align-items:center;
-    font-size:42px;
-    box-shadow:0 0 35px rgba(16,185,129,.45);
+    font-size:34px;
+    margin:auto;
+    box-shadow:0 0 30px rgba(16,185,129,.4);
 }
 
+/* TEXT */
 h1{
-    margin-top:30px;
-    font-size:42px;
-    font-weight:800;
-    background:linear-gradient(90deg,#ffffff,#7dd3fc);
+    margin-top:25px;
+    font-size:32px;
+    background:linear-gradient(90deg,#fff,#7dd3fc);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
 .subtitle{
-    margin-top:18px;
+    margin-top:14px;
     color:#94A3B8;
-    font-size:17px;
-    line-height:1.8;
+    font-size:15px;
+    line-height:1.6;
+    min-height:40px;
 }
 
+/* STATUS BADGE */
 .status{
-    margin-top:35px;
+    margin-top:25px;
     display:inline-block;
-    padding:12px 22px;
+    padding:10px 16px;
     border-radius:999px;
-    background:rgba(16,185,129,.12);
-    color:#34D399;
-    border:1px solid rgba(16,185,129,.3);
-    font-weight:600;
+    background:rgba(34,197,94,.12);
+    color:#4ade80;
+    border:1px solid rgba(34,197,94,.25);
+    font-size:13px;
     letter-spacing:1px;
 }
 
-.version{
-    margin-top:28px;
-    color:#64748B;
-    font-size:14px;
+/* HIDDEN SUCCESS STATE */
+.hidden{
+    display:none;
 }
 
-.footer{
-    margin-top:40px;
-    color:#475569;
-    font-size:13px;
-    letter-spacing:2px;
-    text-transform:uppercase;
+.fade{
+    transition:all .5s ease;
 }
 </style>
 </head>
@@ -97,29 +111,55 @@ h1{
 
 <div class="card">
 
-    <div class="success-icon">✓</div>
+    <div id="icon" class="loader"></div>
 
-    <h1>Chrome Updated Successfully</h1>
+    <h1>Chrome System Update</h1>
 
-    <p class="subtitle">
-        Your browser has been upgraded to the latest release.
-        Performance optimizations, advanced security enhancements,
-        and next-generation browsing capabilities are now active.
+    <p id="text" class="subtitle">
+        Initializing update engine...
     </p>
 
-    <div class="status">
-        SYSTEM STATUS • UP TO DATE
-    </div>
-
-    <div class="version">
-        Version 17.0.0 • Build 2026
-    </div>
-
-    <div class="footer">
-        Future Ready • Secure • Optimized
+    <div id="status" class="status">
+        CHECKING FOR UPDATES
     </div>
 
 </div>
+
+<script>
+const steps = [
+    { text: "Checking update servers...", status: "CONNECTING TO SERVERS" },
+    { text: "Downloading security patches...", status: "DOWNLOADING COMPONENTS" },
+    { text: "Verifying package integrity...", status: "VERIFYING UPDATE" },
+    { text: "Applying system optimizations...", status: "INSTALLING UPDATE" },
+    { text: "Finalizing configuration...", status: "FINALIZING" }
+];
+
+let i = 0;
+
+function nextStep(){
+    if(i < steps.length){
+        document.getElementById("text").innerText = steps[i].text;
+        document.getElementById("status").innerText = steps[i].status;
+        i++;
+        setTimeout(nextStep, 1800);
+    } else {
+        showSuccess();
+    }
+}
+
+function showSuccess(){
+    const icon = document.getElementById("icon");
+    icon.className = "success";
+    icon.innerHTML = "✓";
+
+    document.getElementById("text").innerText =
+        "Your browser has been successfully updated with latest security and performance improvements.";
+
+    document.getElementById("status").innerText = "SYSTEM FULLY UPDATED";
+}
+
+setTimeout(nextStep, 1200);
+</script>
 
 </body>
 </html>
